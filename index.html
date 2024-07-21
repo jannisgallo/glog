@@ -59,17 +59,35 @@
         const postsContainer = document.getElementById('posts');
         const addPostBtn = document.getElementById('addPostBtn');
 
+        // Lade die gespeicherten Beiträge beim Laden der Seite
+        window.onload = loadPosts;
+
         addPostBtn.addEventListener('click', addPost);
+
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>`;
+                postsContainer.appendChild(postElement);
+            });
+        }
 
         function addPost() {
             const postTitle = prompt('Enter post title:');
             const postContent = prompt('Enter post content:');
 
             if (postTitle && postContent) {
-                const post = document.createElement('div');
-                post.classList.add('post');
-                post.innerHTML = `<h2>${postTitle}</h2><p>${postContent}</p>`;
-                postsContainer.appendChild(post);
+                const post = { title: postTitle, content: postContent };
+                const posts = JSON.parse(localStorage.getItem('posts')) || [];
+                posts.push(post);
+                localStorage.setItem('posts', JSON.stringify(posts));
+
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `<h2>${postTitle}</h2><p>${postContent}</p>`;
+                postsContainer.appendChild(postElement);
             } else {
                 alert('Both title and content are required!');
             }
