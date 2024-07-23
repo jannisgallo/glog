@@ -55,6 +55,24 @@
             border-radius: 5px;
             font-size: 16px;
         }
+        #backupBtn, #loadBackupBtn {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 10px 15px;
+            background: #007BFF; /* Bootstrap primary color */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #backupBtn:hover, #loadBackupBtn:hover {
+            background: #0056b3; /* Darker shade on hover */
+        }
+        .button-container {
+            text-align: right; /* Align buttons to the right */
+            margin-bottom: 20px; /* Space below the buttons */
+        }
     </style>
 </head>
 <body>
@@ -62,6 +80,10 @@
         <h1>GLOG 1337</h1>
     </header>
     <div class="container">
+        <div class="button-container">
+            <button id="backupBtn">Backup Posts</button>
+            <button id="loadBackupBtn">Load Backup</button>
+        </div>
         <div id="posts">
             <!-- Blog posts will appear here -->
         </div>
@@ -78,12 +100,16 @@
         const addPostBtn = document.getElementById('addPostBtn');
         const postForm = document.getElementById('postForm');
         const submitPostBtn = document.getElementById('submitPostBtn');
+        const backupBtn = document.getElementById('backupBtn');
+        const loadBackupBtn = document.getElementById('loadBackupBtn');
 
         // Lade die gespeicherten Beiträge beim Laden der Seite
         window.onload = loadPosts;
 
         addPostBtn.addEventListener('click', showPostForm);
         submitPostBtn.addEventListener('click', addPost);
+        backupBtn.addEventListener('click', backupPosts);
+        loadBackupBtn.addEventListener('click', loadBackup);
 
         function loadPosts() {
             const posts = JSON.parse(localStorage.getItem('posts')) || [];
@@ -141,6 +167,25 @@
                 const updatedPosts = posts.filter(p => p.title !== post.title || p.content !== post.content);
                 localStorage.setItem('posts', JSON.stringify(updatedPosts));
                 postsContainer.removeChild(postElement);
+            }
+        }
+
+        function backupPosts() {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const backup = JSON.stringify(posts);
+            localStorage.setItem('posts_backup', backup);
+            alert('Backup erstellt!');
+        }
+
+        function loadBackup() {
+            const backup = JSON.parse(localStorage.getItem('posts_backup'));
+            if (backup) {
+                localStorage.setItem('posts', JSON.stringify(backup));
+                postsContainer.innerHTML = ''; // Clear current posts
+                loadPosts(); // Reload posts
+                alert('Backup geladen!');
+            } else {
+                alert('Kein Backup gefunden!');
             }
         }
     </script>
