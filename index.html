@@ -116,7 +116,7 @@
             posts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
-                postElement.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>`;
+                postElement.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p><small style="color: gray;">${post.date}</small>`;
                 
                 // {{ edit_1 }}
                 const deleteBtn = document.createElement('button');
@@ -136,16 +136,17 @@
         function addPost() {
             const postTitle = document.getElementById('postTitle').value;
             const postContent = document.getElementById('postContent').value;
+            const postDate = new Date().toLocaleDateString('de-DE'); // {{ edit_1 }}
 
             if (postTitle && postContent) {
-                const post = { title: postTitle, content: postContent };
+                const post = { title: postTitle, content: postContent, date: postDate }; // {{ edit_2 }}
                 const posts = JSON.parse(localStorage.getItem('posts')) || [];
                 posts.push(post);
                 localStorage.setItem('posts', JSON.stringify(posts));
 
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
-                postElement.innerHTML = `<h2>${postTitle}</h2><p>${postContent}</p>`;
+                postElement.innerHTML = `<h2>${postTitle}</h2><p>${postContent}</p><small style="color: gray;">${postDate}</small>`; // {{ edit_3 }}
                 const deleteBtn = document.createElement('button');
                 deleteBtn.innerText = 'Delete Post';
                 deleteBtn.addEventListener('click', () => confirmDelete(postElement, post));
