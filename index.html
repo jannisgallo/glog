@@ -52,17 +52,25 @@
         <div id="posts">
             <!-- Blog posts will appear here -->
         </div>
+        <div id="postForm" style="display: none;">
+            <input type="text" id="postTitle" placeholder="Post Title" />
+            <textarea id="postContent" placeholder="Post Content"></textarea>
+            <button id="submitPostBtn">Submit Post</button>
+        </div>
         <button id="addPostBtn">Add Post</button>
     </div>
 
     <script>
         const postsContainer = document.getElementById('posts');
         const addPostBtn = document.getElementById('addPostBtn');
+        const postForm = document.getElementById('postForm');
+        const submitPostBtn = document.getElementById('submitPostBtn');
 
         // Lade die gespeicherten Beiträge beim Laden der Seite
         window.onload = loadPosts;
 
-        addPostBtn.addEventListener('click', addPost);
+        addPostBtn.addEventListener('click', showPostForm);
+        submitPostBtn.addEventListener('click', addPost);
 
         function loadPosts() {
             const posts = JSON.parse(localStorage.getItem('posts')) || [];
@@ -74,9 +82,13 @@
             });
         }
 
+        function showPostForm() {
+            postForm.style.display = 'block';
+        }
+
         function addPost() {
-            const postTitle = prompt('Enter post title:');
-            const postContent = prompt('Enter post content:');
+            const postTitle = document.getElementById('postTitle').value;
+            const postContent = document.getElementById('postContent').value;
 
             if (postTitle && postContent) {
                 const post = { title: postTitle, content: postContent };
@@ -88,6 +100,10 @@
                 postElement.classList.add('post');
                 postElement.innerHTML = `<h2>${postTitle}</h2><p>${postContent}</p>`;
                 postsContainer.appendChild(postElement);
+
+                postForm.style.display = 'none';
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postContent').value = '';
             } else {
                 alert('Both title and content are required!');
             }
